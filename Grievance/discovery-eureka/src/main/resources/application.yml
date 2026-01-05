@@ -1,0 +1,29 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-eureka
+
+eureka:
+  client:
+    register-with-eureka: false   # important: don't register the server as a client
+    fetch-registry: false         # server shouldn't fetch its own registry
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,metrics,beans
+  endpoint:
+    health:
+      enabled: true
+  server:
+    port: 8761  # can be same as server.port or different if you want separate actuator port
+
+logging:
+  level:
+    org.springframework.cloud.netflix.eureka: INFO
+    com.netflix.discovery: INFO
