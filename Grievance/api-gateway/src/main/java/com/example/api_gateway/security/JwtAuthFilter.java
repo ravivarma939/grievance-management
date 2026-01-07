@@ -21,10 +21,13 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
         return (exchange, chain) -> {
 
             String path = exchange.getRequest().getURI().getPath();
+            String method = exchange.getRequest().getMethod().toString();
 
             // PUBLIC endpoints (NO JWT REQUIRED)
             if (path.startsWith("/auth")
-                    || path.equals("/users/register")) {
+                    || path.equals("/users/register")
+                    || (path.startsWith("/grievance") && method.equals("GET"))) {
+                // Allow GET requests to /grievance for guest users (view-only access)
                 return chain.filter(exchange);
             }
 

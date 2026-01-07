@@ -82,3 +82,5 @@ If your API Gateway runs on a different port, update the `API_BASE_URL` in:
 - Check API Gateway is accessible at `http://localhost:8080`
 - Verify network connectivity
 
+
+

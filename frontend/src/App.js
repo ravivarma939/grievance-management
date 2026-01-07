@@ -3,12 +3,24 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Register from './components/Register';
 import GrievanceList from './components/GrievanceList';
+import BookmarksList from './components/BookmarksList';
+import UserProfile from './components/UserProfile';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  const { isAuthenticated, isGuest } = useAuth();
+  // Allow both authenticated users and guests
+  if (isAuthenticated) {
+    return children;
+  }
+  // Check localStorage in case context hasn't loaded yet
+  const storedGuest = localStorage.getItem('isGuest');
+  const storedToken = localStorage.getItem('token');
+  if (storedGuest === 'true' || storedToken) {
+    return children;
+  }
+  return <Navigate to="/login" />;
 };
 
 function App() {
@@ -24,6 +36,22 @@ function App() {
               element={
                 <PrivateRoute>
                   <GrievanceList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/bookmarks"
+              element={
+                <PrivateRoute>
+                  <BookmarksList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <UserProfile />
                 </PrivateRoute>
               }
             />

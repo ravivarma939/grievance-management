@@ -25,8 +25,19 @@ public class RouteConfig {
                         .filters(f -> f.stripPrefix(0)
                                 .filter(jwtAuthFilter.apply(new JwtAuthFilter.Config())))
                         .uri("lb://user-profile-service"))
+                // Public route for GET requests to grievances (guest access)
+                .route("public_grievance_get", r -> r
+                        .path("/grievance/**")
+                        .and()
+                        .method("GET")
+                        .filters(f -> f.stripPrefix(0))
+                        .uri("lb://grievance-service"))
+                // Secured routes for POST/PUT/DELETE grievances (require JWT)
+                // This route will match non-GET requests because GET is already handled above
                 .route("secured_grievance_routes", r -> r
                         .path("/grievance/**")
+                        .and()
+                        .not(p -> p.method("GET"))
                         .filters(f -> f.stripPrefix(0)
                                 .filter(jwtAuthFilter.apply(new JwtAuthFilter.Config())))
                         .uri("lb://grievance-service"))

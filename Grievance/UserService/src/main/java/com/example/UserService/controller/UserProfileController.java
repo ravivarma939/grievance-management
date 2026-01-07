@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,28 @@ public class UserProfileController {
     public UserProfile register(@RequestBody UserRegistrationRequest request) {
         return service.registerUser(request);
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(
+            @RequestHeader(value = "X-Username", required = false) String username) {
+        if (username == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+
+        Optional<UserProfile> userOptional = service.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+        }
+
+        UserProfile user = userOptional.get();
+        return ResponseEntity.ok(Map.of(
+                "fullName", user.getFullName(),
+                "username", user.getUsername(),
+                "email", user.getEmail() != null ? user.getEmail() : "",
+                "state", user.getState()
+        ));
+    }
+
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(
             @RequestHeader(value = "X-Username", required = false) String username,

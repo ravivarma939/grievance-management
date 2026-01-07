@@ -15,6 +15,8 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,8 +38,32 @@ const Register = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    // Password validation: min 8 chars, 1 capital, 1 small, 1 number, 1 special char
+    const password = formData.password;
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+    
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    if (!hasUpperCase) {
+      setError('Password must contain at least one uppercase letter');
+      return;
+    }
+    if (!hasLowerCase) {
+      setError('Password must contain at least one lowercase letter');
+      return;
+    }
+    if (!hasNumber) {
+      setError('Password must contain at least one number');
+      return;
+    }
+    if (!hasSpecialChar) {
+      setError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>)');
       return;
     }
 
@@ -111,29 +137,55 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
+            <div className="password-input-wrapper">
+              <input
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              placeholder="Enter password (min 6 characters)"
-              minLength={6}
+              minLength={8}
+              className="password-input"
             />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+            <small className="form-hint">
+              Password must be at least 8 characters with: 1 uppercase, 1 lowercase, 1 number, and 1 special character
+            </small>
           </div>
 
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder="Confirm your password"
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                placeholder="Confirm your password"
+                className="password-input"
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                title={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
           </div>
 
           <div className="form-group">
@@ -166,4 +218,5 @@ const Register = () => {
 };
 
 export default Register;
+
 

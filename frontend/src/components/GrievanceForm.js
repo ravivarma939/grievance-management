@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { grievanceService } from '../services/grievanceService';
 import './GrievanceForm.css';
 
-const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
+const GrievanceForm = ({ onClose, onSubmit }) => {
   const { username } = useAuth();
   const [formData, setFormData] = useState({
     company: '',
-    issueType: '',
+    product: '',
     state: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const issueTypes = [
+  const products = [
     'Banking Issue',
     'Debit Card Issue',
     'Credit Card Issue',
@@ -30,18 +30,9 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
     'Canara Bank',
     'Union Bank of India',
     'Indian Bank',
-    'Kotak Mahindra Bank'
+    'Kotak Mahindra Bank',
+    'JPMORGAN'
   ];
-
-  useEffect(() => {
-    if (grievance) {
-      setFormData({
-        company: grievance.company || '',
-        issueType: grievance.issueType || '',
-        state: grievance.state || ''
-      });
-    }
-  }, [grievance]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,22 +47,18 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
     setError('');
     setLoading(true);
 
+    // External API expects: company, product, state (and possibly other fields)
     const dataToSubmit = {
-      username: username,
       company: formData.company,
-      issueType: formData.issueType,
+      product: formData.product,
       state: formData.state
     };
 
     try {
-      if (grievance) {
-        await grievanceService.update(grievance.grievanceId, dataToSubmit);
-      } else {
-        await grievanceService.create(dataToSubmit);
-      }
+      await grievanceService.create(dataToSubmit);
       onSubmit();
     } catch (err) {
-      setError('Failed to save grievance: ' + (err.response?.data?.error || err.message));
+      setError('Failed to create grievance: ' + (err.response?.data?.error || err.message));
     } finally {
       setLoading(false);
     }
@@ -81,23 +68,11 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{grievance ? 'Edit Grievance' : 'Create New Grievance'}</h2>
+          <h2>Create New Grievance</h2>
           <button className="close-button" onClick={onClose}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="grievance-form">
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              disabled
-              className="disabled-input"
-            />
-            <small className="form-hint">Username is automatically set from your login</small>
-          </div>
-
           <div className="form-group">
             <label htmlFor="company">Company <span className="required">*</span></label>
             <select
@@ -118,19 +93,19 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="issueType">Issue Type <span className="required">*</span></label>
+            <label htmlFor="product">Product <span className="required">*</span></label>
             <select
-              id="issueType"
-              name="issueType"
-              value={formData.issueType}
+              id="product"
+              name="product"
+              value={formData.product}
               onChange={handleChange}
               required
               className="form-select"
             >
-              <option value="">Select Issue Type</option>
-              {issueTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
+              <option value="">Select Product</option>
+              {products.map((product) => (
+                <option key={product} value={product}>
+                  {product}
                 </option>
               ))}
             </select>
@@ -157,7 +132,7 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
               Cancel
             </button>
             <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Saving...' : grievance ? 'Update' : 'Create'}
+              {loading ? 'Creating...' : 'Create'}
             </button>
           </div>
         </form>
@@ -167,4 +142,3 @@ const GrievanceForm = ({ grievance, onClose, onSubmit }) => {
 };
 
 export default GrievanceForm;
-

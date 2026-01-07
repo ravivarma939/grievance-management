@@ -5,15 +5,8 @@ spring:
   application:
     name: grievance-service
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/grievance_data?createDatabaseIfNotExist=true
-    username: root
-    password: ravigoud
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  # Removed database configuration as grievances come from external API
+  # Only bookmarks service uses database
 
 eureka:
   client:
@@ -29,3 +22,8 @@ management:
     web:
       exposure:
         include: "*"
+
+# External Grievance API Configuration
+grievance:
+  api:
+    base-url: http://localhost:3232/grievance

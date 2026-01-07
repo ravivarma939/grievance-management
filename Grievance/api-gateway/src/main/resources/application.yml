@@ -35,14 +35,14 @@ spring:
             - JwtAuthFilter
 
 
-        # GRIEVANCE SERVICE (secured)
-        - id: grievance-service
-          uri: lb://grievance-service
-          predicates:
-            - Path=/grievance/**
-          filters:
-            
-            - JwtAuthFilter
+        # GRIEVANCE SERVICE routes are handled in RouteConfig.java
+        # (GET requests are public, POST/PUT/DELETE require JWT)
+        # - id: grievance-service
+        #   uri: lb://grievance-service
+        #   predicates:
+        #     - Path=/grievance/**
+        #   filters:
+        #     - JwtAuthFilter
 
 
         # BOOKMARK SERVICE (secured)

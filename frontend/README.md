@@ -118,3 +118,5 @@ The company dropdown includes the following banks:
 - JWT tokens are stored in localStorage for session persistence
 - The application uses React Router for navigation
 
+
+

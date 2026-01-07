@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  grievance-api:
+    image: stackroutenew/grievanceapi
+    container_name: grievance-api
+    ports:
+      - "3232:3232"
+    restart: unless-stopped
+
+    # If you ever need to pass env vars, add them here:
+    # environment:
+    #   - SOME_ENV=VALUE
+
+    # Simple health check to see if the API is up
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3232/grievance"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+

@@ -13,16 +13,24 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [username, setUsername] = useState('');
   const [token, setToken] = useState('');
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUsername = localStorage.getItem('username');
-    if (storedToken && storedUsername) {
+    const storedGuest = localStorage.getItem('isGuest');
+    
+    if (storedGuest === 'true') {
+      setIsGuest(true);
+      setIsAuthenticated(true);
+      setUsername('Guest');
+    } else if (storedToken && storedUsername) {
       setToken(storedToken);
       setUsername(storedUsername);
       setIsAuthenticated(true);
+      setIsGuest(false);
     }
   }, []);
 
@@ -33,8 +41,10 @@ export const AuthProvider = ({ children }) => {
         setToken(response.token);
         setUsername(username);
         setIsAuthenticated(true);
+        setIsGuest(false);
         localStorage.setItem('token', response.token);
         localStorage.setItem('username', username);
+        localStorage.removeItem('isGuest');
         return { success: true };
       } else {
         return { success: false, error: 'No token received from server' };
@@ -44,16 +54,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginAsGuest = () => {
+    setIsGuest(true);
+    setIsAuthenticated(true);
+    setUsername('Guest');
+    setToken('');
+    localStorage.setItem('isGuest', 'true');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    return { success: true };
+  };
+
   const logout = () => {
     setToken('');
     setUsername('');
     setIsAuthenticated(false);
+    setIsGuest(false);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    localStorage.removeItem('isGuest');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, username, token, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isGuest, username, token, login, loginAsGuest, logout }}>
       {children}
     </AuthContext.Provider>
   );

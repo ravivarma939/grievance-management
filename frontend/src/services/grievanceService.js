@@ -11,21 +11,41 @@ export const grievanceService = {
     return response.data;
   },
 
-  update: async (grievanceId, grievanceData) => {
-    const response = await api.put(`/grievance/${grievanceId}`, grievanceData);
-    return response.data;
-  },
-
-  delete: async (grievanceId) => {
-    const response = await api.delete(`/grievance/${grievanceId}`);
-    return response.data;
-  },
-
-  filter: async (issueType, company) => {
+  filter: async (propertyName, value) => {
     const response = await api.get('/grievance/filter', {
-      params: { issueType, company }
+      params: { propertyName, value }
     });
+    return response.data;
+  },
+
+  filterByCompany: async (company) => {
+    const response = await api.get('/grievance/filter', {
+      params: { company }
+    });
+    return response.data;
+  },
+
+  filterByProduct: async (product) => {
+    const response = await api.get('/grievance/filter', {
+      params: { product }
+    });
+    return response.data;
+  },
+
+  filterByState: async (state) => {
+    const response = await api.get('/grievance/filter', {
+      params: { state }
+    });
+    return response.data;
+  },
+
+  getStatistics: async () => {
+    const response = await api.get('/grievance/statistics');
+    return response.data;
+  },
+
+  getTimelyResponseCount: async () => {
+    const response = await api.get('/grievance/timely-response-count');
     return response.data;
   }
 };
-

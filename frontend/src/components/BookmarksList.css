@@ -1,0 +1,97 @@
+.bookmarks-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.bookmarks-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #eef7ff;
+  color: #0b5ed7;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #cfe2ff;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+}
+
+.no-bookmarks {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-bookmarks p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.bookmarks-table-container {
+  overflow-x: auto;
+}
+
+.bookmarks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.bookmarks-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.bookmarks-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.bookmarks-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+}
+
+.bookmarks-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.delete-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background: #dc3545;
+  color: white;
+  transition: background 0.3s;
+}
+
+.delete-button:hover {
+  background: #c82333;
+}
+
